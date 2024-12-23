@@ -15,14 +15,16 @@ CC := gcc
 
 CFLAGS := -g -DDEBUG -Wall
 
-.PHONY: all clean check
+.PHONY: all build clean check
 
 all: $(BINARY)
 
-clean:
-	rm -rf $(BUILDDIR)
+build: $(OBJS)
 
 check: $(TESTOBJS)
+
+clean:
+	rm -rf $(BUILDDIR)
 
 $(BINARY): $(OBJS)
 	echo $(OBJS)
