@@ -12,10 +12,5 @@ jobs:
     - uses: actions/checkout@v4
     - name: make build
       run: make build
-  
-  check:
-    runs-on: ubuntu-latest
-    
-    steps:
     - name: make check
       run: make check
