@@ -6,8 +6,12 @@ TESTOBJDIR := $(BUILDDIR)/test
 
 HDRS := $(wildcard $(SRCDIR)/*.h)
 SRCS := $(wildcard $(SRCDIR)/*.c)
+OBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SRCS))
 BINARY := $(BUILDDIR)/$(PRODUCT)
-OBJS := $(SRCS:./%.c=$(BUILDDIR)/%.o)
+
+BUILDSRCS := $(filter-out $(SRCDIR)/main.c, $(wildcard $(SRCDIR)/*.c))
+BUILDOBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(BUILDSRCS))
+
 TESTS := $(wildcard $(TESTDIR)/*.c)
 TESTOBJS := $(patsubst $(TESTDIR)/%.c, $(TESTOBJDIR)/%, $(TESTS))
 
@@ -15,11 +19,11 @@ CC := gcc
 
 CFLAGS := -g -DDEBUG -Wall
 
-.PHONY: all build clean check
+.PHONY: all build check clean
 
 all: $(BINARY)
 
-build: $(OBJS)
+build: $(BUILDOBJS)
 
 check: $(TESTOBJS)
 
@@ -32,14 +36,14 @@ $(BINARY): $(OBJS)
 	$(maketargetdir)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-$(BUILDDIR)/%.o : ./%.c
+$(BUILDDIR)/%.o : $(SRCDIR)/%.c
 	@echo compiling $<
 	$(maketargetdir)
 	$(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<
 
-$(TESTOBJDIR)/%: $(TESTDIR)/%.c $(OBJS)
+$(TESTOBJDIR)/%: $(TESTDIR)/%.c $(BUILDOBJS)
 	mkdir -p $(TESTOBJDIR)
-	$(CC) $(CFLAGS) $< $(OBJS) -o $@
+	$(CC) $(CFLAGS) $< $(BUILDOBJS) -o $@
 
 define maketargetdir
 	-@mkdir -p $(dir $@) > /dev/null 2>&1
