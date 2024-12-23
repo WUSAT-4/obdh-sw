@@ -1,10 +1,11 @@
 PRODUCT := obdh-controller
-BUILDDIR := ../build
-TESTDIR := ../test
+SRCDIR := ./src
+BUILDDIR := ./build
+TESTDIR := ./test
 TESTOBJDIR := $(BUILDDIR)/test
 
-HDRS := $(wildcard ./*.h)
-SRCS := $(wildcard ./*.c)
+HDRS := $(wildcard $(SRCDIR)/*.h)
+SRCS := $(wildcard $(SRCDIR)/*.c)
 BINARY := $(BUILDDIR)/$(PRODUCT)
 OBJS := $(SRCS:./%.c=$(BUILDDIR)/%.o)
 TESTS := $(wildcard $(TESTDIR)/*.c)
