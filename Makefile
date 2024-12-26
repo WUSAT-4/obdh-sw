@@ -45,7 +45,7 @@ $(TESTOBJDIR)/%: $(TESTDIR)/%.c $(BUILDOBJS)
 	mkdir -p $(TESTOBJDIR)
 	$(CC) $(CFLAGS) $< $(BUILDOBJS) -o $@
 	@echo running test $@
-	./$@
+	@./$@
 
 define maketargetdir
 	-@mkdir -p $(dir $@) > /dev/null 2>&1
