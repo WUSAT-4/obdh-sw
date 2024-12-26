@@ -34,7 +34,7 @@ $(BINARY): $(OBJS)
 	echo $(OBJS)
 	@echo linking $@
 	$(maketargetdir)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^
 
 $(BUILDDIR)/%.o : $(SRCDIR)/%.c
 	@echo compiling $<
