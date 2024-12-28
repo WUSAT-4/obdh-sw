@@ -3,6 +3,7 @@
 
 #include "../src/functions.h"
 #include "../src/globals.h"
+#include "dummy_subsystems.h"
 
 int main() {
     change_op_mode(1, 30.0f, 69);
