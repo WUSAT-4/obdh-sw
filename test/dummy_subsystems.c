@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include "dummy_subsystems.h"
 
@@ -18,4 +19,8 @@ void get_image_data(int*** image_buffer, int row, int col) {
 
 float get_temperature() {
     return (float) rand()/(float)(RAND_MAX/70);
+}
+
+unsigned long get_timestamp() {
+    return (unsigned long) time(NULL);
 }

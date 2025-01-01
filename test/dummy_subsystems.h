@@ -4,5 +4,6 @@
 float get_battery_gauge();
 void get_image_data(int*** image_buffer, int row, int col);
 float get_payload_temp();
+unsigned long get_timestamp();
 
 #endif

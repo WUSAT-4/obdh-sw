@@ -7,8 +7,8 @@
 int main() {
     srand((unsigned int) time(NULL));
 
-    int image_height = 15;
-    int image_width = 20;
+    int image_height = 1944;
+    int image_width = 2592;
 
     int **image = malloc(image_height * sizeof(int*));
 
@@ -18,13 +18,12 @@ int main() {
 
     get_image_data(&image, image_height, image_width);
 
-    printf("Image received: \n");
+    printf("Got image\n");
     
     for (int i = 0; i < image_height; i++) {
         for (int j = 0; j < image_width; j++) {
-            printf("%d\t", image[i][j]);
+            if (image[i][j]);
         }
-        printf("\n");
     }
 
     for (int i = 0; i < image_height; i++) {
