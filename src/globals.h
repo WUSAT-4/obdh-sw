@@ -4,6 +4,10 @@
 #define BATTERY_SAFE 40
 #define BATTERY_SURVIVAL 20
 #define POWER_GEN_LOW 50
+#define HEADER_SIZE 25
+#define PACKET_SIZE 65536
+#define IMAGE_HEIGHT 1944
+#define IMAGE_WIDTH 2592
 
 typedef enum {
     HEARTBEAT = 0,
@@ -17,7 +21,17 @@ typedef enum {
     TRUE = 1
 } bool_t;
 
+typedef struct {
+    short ack;
+    float pcb_temp;
+    float fdspp_temp;
+    float battery_gauge;
+    bool_t panel_deployed;
+    op_mode_t operating_mode;
+    int* image_data;
+} wusat_app_t;
 
 extern op_mode_t OPERATING_MODE;
+extern char *data_buffer;
 
 #endif

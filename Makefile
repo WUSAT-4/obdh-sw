@@ -7,7 +7,7 @@ TESTOBJDIR := $(BUILDDIR)/test
 HDRS := $(shell find $(SRCDIR) -name '*.h')
 SRCS := $(shell find $(SRCDIR) -name '*.c')
 OBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SRCS))
-BINARY := $(BUILDDIR)/$(PRODUCT)
+BINARY := $(filter-out $(TESTOBJDIR), $(BUILDDIR)/$(PRODUCT))
 
 BUILDSRCS := $(filter-out $(SRCDIR)/main.c, $(shell find $(SRCDIR) -name '*.c'))
 BUILDOBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(BUILDSRCS))
