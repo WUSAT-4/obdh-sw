@@ -12,11 +12,8 @@ BINARY := $(filter-out $(TESTOBJDIR), $(BUILDDIR)/$(PRODUCT))
 BUILDSRCS := $(filter-out $(SRCDIR)/main.c, $(shell find $(SRCDIR) -name '*.c'))
 BUILDOBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(BUILDSRCS))
 
-TESTS := $(filter-out $(TESTDIR)/dummy_%, $(wildcard $(TESTDIR)/*.c))
+TESTS := $(wildcard $(TESTDIR)/*.c)
 TESTOBJS := $(patsubst $(TESTDIR)/%.c, $(TESTOBJDIR)/%, $(TESTS))
-
-DEVS := $(filter-out $(TESTDIR)/test_%, $(wildcard $(TESTDIR)/*.c))
-DEVOBJS := $(patsubst $(TESTDIR)/%.c, $(TESTOBJDIR)/%.o, $(DEVS))
 
 CC := gcc
 
@@ -28,7 +25,7 @@ all: $(BINARY)
 
 build: $(BUILDOBJS)
 
-check: $(TESTOBJS) $(DEVOBJS)
+check: $(TESTOBJS)
 
 clean:
 	rm -rf $(BUILDDIR)
@@ -44,9 +41,9 @@ $(BUILDDIR)/%.o : $(SRCDIR)/%.c
 	$(maketargetdir)
 	$(CC) $(CFLAGS) $(CINCLUDES) -c -o $@ $<
 
-$(TESTOBJDIR)/%: $(TESTDIR)/%.c $(BUILDOBJS) $(DEVOBJS)
+$(TESTOBJDIR)/%: $(TESTDIR)/%.c $(BUILDOBJS)
 	$(maketargetdir)
-	$(CC) $(CFLAGS) $< $(BUILDOBJS) $(DEVOBJS) -o $@
+	$(CC) $(CFLAGS) $< $(BUILDOBJS) -o $@
 	@echo running test $@
 	@./$@
 	@echo -e test $@ '\033[0;32m'PASSED'\033[0m'
