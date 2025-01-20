@@ -30,7 +30,6 @@
  */
 
 #define TM_VERSION_NUMBER                   0
-#define TM_SEC_HDR_VERSION_NUMBER           0
 #define	TM_PRIMARY_HDR_LEN                  6
 #define	TM_OCF_LENGTH                       4
 #define TM_CRC_LENGTH                       2
@@ -54,11 +53,6 @@ typedef enum {
 	TM_CRC_NOTPRESENT 	= 0,
 	TM_CRC_PRESENT 		= 1
 } tm_crc_flag_t;
-
-typedef enum {
-	TM_SEC_HDR_NOTPRESENT   = 0,
-	TM_SEC_HDR_PRESENT      = 1
-} tm_sec_hdr_flag_t;
 
 typedef enum {
 	TYPE_OS_ID      = 0,
@@ -94,7 +88,6 @@ struct tm_master_channel_id {
  * Data field status struct
  */
 struct tm_df_status {
-	uint8_t					sec_hdr         : 1;
 	uint8_t					sync            : 1;
 	uint8_t					pkt_order       : 1;
 	uint8_t					seg_len_id      : 2;
@@ -117,18 +110,10 @@ struct tm_primary_hdr {
 /**
  * Secondary header ID struct
  */
-struct tm_sec_hdr_id {
-	uint8_t		version_num : 2;
-	uint8_t		length      : 6;
-};
 
 /**
  * Secondary header struct
  */
-struct tm_sec_hdr {
-	struct tm_sec_hdr_id       sec_hdr_id;
-	uint8_t                    *sec_hdr_data_field;
-};
 
 /**
  * Mission parameters struct
@@ -160,7 +145,6 @@ struct tm_mission_params {
 
 struct tm_transfer_frame {
 	struct tm_primary_hdr       primary_hdr;        /* The primary header struct*/
-	struct tm_sec_hdr           secondary_hdr;      /* The secondary header struct*/
 	uint8_t                     ocf[4];             /* The OCF field */
 	uint16_t                    crc;                /* CRC value*/
 	uint8_t                     *data;              /* Pointer to FDU*/
@@ -174,11 +158,8 @@ struct tm_transfer_frame {
  * for all TM structures of different VCs
  * @param vcid the virtual channel ID
  * @param ocf_flag flag for the presence or not of OCF
- * @param sec_hdr_fleg flag for the presence or not of
- * the secondary header
+
  * @param sync_flag sync flag
- * @param sec_hdr_len length of secondary header if present
- * @param sec_hdr pointer to the secondary header structure
  * if present
  * @param OCF value
  * @param crc_flag flag for the presence or not of CRC
@@ -194,10 +175,7 @@ osdlp_tm_init(struct tm_transfer_frame *tm_tf,
               uint8_t vcid,
               tm_ocf_flag_t ocf_flag,
               tm_ocf_type_t ocf_type,
-              tm_sec_hdr_flag_t sec_hdr_fleg,
               tm_sync_flag_t sync_flag,
-              uint8_t sec_hdr_len,
-              uint8_t *sec_hdr,
               tm_crc_flag_t crc_flag,
               uint16_t frame_size,
               uint16_t max_sdu_len,

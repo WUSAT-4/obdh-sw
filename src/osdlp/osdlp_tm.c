@@ -28,10 +28,7 @@ osdlp_tm_init(struct tm_transfer_frame *tm_tf,
               uint8_t vcid,
               tm_ocf_flag_t ocf_flag,
               tm_ocf_type_t ocf_type,
-              tm_sec_hdr_flag_t sec_hdr_fleg,
               tm_sync_flag_t sync_flag,
-              uint8_t sec_hdr_len,
-              uint8_t *sec_hdr,
               tm_crc_flag_t crc_flag,
               uint16_t frame_size,
               uint16_t max_sdu_len,
@@ -50,7 +47,6 @@ osdlp_tm_init(struct tm_transfer_frame *tm_tf,
 	tm_tf->primary_hdr.ocf 					= ocf_flag & 0x01;
 	tm_tf->primary_hdr.mc_frame_cnt			= mc_count;
 	tm_tf->primary_hdr.vc_frame_cnt 		= 0;
-	tm_tf->primary_hdr.status.sec_hdr 		= sec_hdr_fleg & 0x01;
 	tm_tf->primary_hdr.status.sync 			= sync_flag & 0x01;
 	tm_tf->primary_hdr.status.pkt_order		= 0;
 	tm_tf->primary_hdr.status.seg_len_id 	= 0x03;
@@ -71,15 +67,7 @@ osdlp_tm_init(struct tm_transfer_frame *tm_tf,
 
 	uint16_t occupied = TM_PRIMARY_HDR_LEN;
 	uint16_t occupied_header = TM_PRIMARY_HDR_LEN;
-	if (tm_tf->primary_hdr.status.sec_hdr == TM_SEC_HDR_PRESENT) {
-		tm_tf->secondary_hdr.sec_hdr_id.version_num = 0;
-		tm_tf->secondary_hdr.sec_hdr_id.length = sec_hdr_len;
-		memcpy(tm_tf->secondary_hdr.sec_hdr_data_field,
-		       sec_hdr,
-		       sec_hdr_len * sizeof(uint8_t));
-		occupied += tm_tf->secondary_hdr.sec_hdr_id.length + 1;
-		occupied_header = occupied;
-	}
+	
 	if (tm_tf->primary_hdr.ocf == TM_OCF_PRESENT) {
 		occupied += TM_OCF_LENGTH;
 	}
@@ -106,20 +94,12 @@ osdlp_tm_pack(struct tm_transfer_frame *tm_tf, uint8_t *pkt_out,
 	pkt_out[2] = (*tm_tf->primary_hdr.mc_frame_cnt & 0xff);
 	pkt_out[3] = (tm_tf->primary_hdr.vc_frame_cnt & 0xff);
 
-	pkt_out[4] = ((tm_tf->primary_hdr.status.sec_hdr & 0x01) << 7);
 	pkt_out[4] |= ((tm_tf->primary_hdr.status.sync & 0x01) << 6);
 	pkt_out[4] |= ((tm_tf->primary_hdr.status.pkt_order & 0x01) << 5);
 	pkt_out[4] |= ((tm_tf->primary_hdr.status.seg_len_id & 0x03) << 3);
 	pkt_out[4] |= ((tm_tf->primary_hdr.status.first_hdr_ptr >> 8) & 0x07);
 	pkt_out[5] = tm_tf->primary_hdr.status.first_hdr_ptr & 0xff;
 
-	if (tm_tf->primary_hdr.status.sec_hdr == TM_SEC_HDR_PRESENT) {
-		pkt_out[6] = ((tm_tf->secondary_hdr.sec_hdr_id.version_num &
-		               0x03) << 6);
-		pkt_out[6] |= (tm_tf->secondary_hdr.sec_hdr_id.length & 0x3f);
-		memcpy(&pkt_out[7], tm_tf->secondary_hdr.sec_hdr_data_field,
-		       sizeof(uint8_t)*tm_tf->secondary_hdr.sec_hdr_id.length);
-	}
 	if (length != 0) {
 		memcpy(&pkt_out[tm_tf->mission.header_len],
 		       data_in, length * sizeof(uint8_t));
@@ -162,16 +142,11 @@ osdlp_tm_unpack(struct tm_transfer_frame *tm_tf, uint8_t *pkt_in)
 	tm_tf->primary_hdr.ocf	 				= pkt_in[1] & 0x01;
 	*tm_tf->primary_hdr.mc_frame_cnt 		= pkt_in[2];
 	tm_tf->primary_hdr.vc_frame_cnt 		= pkt_in[3];
-	tm_tf->primary_hdr.status.sec_hdr 		= (pkt_in[4] >> 7) & 0x01;
 	tm_tf->primary_hdr.status.sync 			= (pkt_in[4] >> 6) & 0x01;
 	tm_tf->primary_hdr.status.pkt_order 	= (pkt_in[4] >> 5) & 0x01;
 	tm_tf->primary_hdr.status.seg_len_id 	= (pkt_in[4] >> 3) & 0x03;
 	tm_tf->primary_hdr.status.first_hdr_ptr	= ((pkt_in[4] & 0x07) << 8) | pkt_in[5];
 
-	if (tm_tf->primary_hdr.status.sec_hdr == TM_SEC_HDR_PRESENT) {
-		tm_tf->secondary_hdr.sec_hdr_id.version_num 	= (pkt_in[6] >> 6) & 0x03;
-		tm_tf->secondary_hdr.sec_hdr_id.length			= pkt_in[6] & 0x3f;
-	}
 	tm_tf->data = &pkt_in[tm_tf->mission.header_len];
 
 	if (tm_tf->primary_hdr.ocf == TM_OCF_PRESENT) {
