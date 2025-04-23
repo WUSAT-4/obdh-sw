@@ -5,3 +5,5 @@
 void hello() {
     printf("Hello, world!\n");
 }
+
+void make_packet() {}

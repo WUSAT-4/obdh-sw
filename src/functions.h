@@ -4,4 +4,6 @@
 
 void hello();
 
+void make_packet();
+
 #endif

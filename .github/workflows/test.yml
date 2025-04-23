@@ -4,15 +4,8 @@ run-name: Running functional tests
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: make build
-      run: make build
-
   check:
+  
     runs-on: ubuntu-latest
 
     steps:

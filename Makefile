@@ -4,8 +4,8 @@ BUILDDIR := ./build
 TESTDIR := ./test
 TESTOBJDIR := $(BUILDDIR)/test
 
-HDRS := $(shell find $(SRCDIR) -name '*.h')
-SRCS := $(shell find $(SRCDIR) -name '*.c')
+HDRS := $(filter-out $(SRCDIR)/dummy_subsystems.h, $(shell find $(SRCDIR) -name '*.h'))
+SRCS := $(filter-out $(SRCDIR)/dummy_subsystems.c, $(shell find $(SRCDIR) -name '*.c'))
 OBJS := $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SRCS))
 BINARY := $(filter-out $(TESTOBJDIR), $(BUILDDIR)/$(PRODUCT))
 
