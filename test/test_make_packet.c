@@ -5,6 +5,11 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include "../src/globals.h"
+#include "../src/functions.h"
 #include "../src/dummy_subsystems.h"
 
 int main() {
@@ -18,4 +23,5 @@ int main() {
 
     make_packet(image_buffer);
     
+    printf("test_make_packet \033[0;32mPASSED\033[0m\n");
 }

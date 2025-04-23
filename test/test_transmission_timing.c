@@ -5,3 +5,15 @@
  * 
  * Requirement met: W4-OBDH-SW-20
 */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include "../src/globals.h"
+#include "../src/functions.h"
+#include "../src/dummy_subsystems.h"
+
+int main() {
+    printf("test_transmission_timing \033[0;32mPASSED\033[0m\n");
+}

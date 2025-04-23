@@ -46,7 +46,6 @@ $(TESTOBJDIR)/%: $(TESTDIR)/%.c $(BUILDOBJS)
 	$(CC) $(CFLAGS) $< $(BUILDOBJS) -o $@
 	@echo running test $@
 	@./$@
-	@echo -e test $@ '\033[0;32m'PASSED'\033[0m'
 
 $(TESTOBJDIR)/%.o : $(TESTDIR)/%.c
 	@echo compiling $<

@@ -12,4 +12,6 @@
 
 int main() {
     hello();
+
+    printf("test_hello_world \033[0;32mPASSED\033[0m\n");
 }
